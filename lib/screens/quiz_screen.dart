@@ -116,7 +116,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   'Attention!',
                   style: TextStyle(
                     fontSize: 20,
-                    // fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
@@ -146,25 +146,32 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       child: const Text(
                         'No, Continue',
-                        style: TextStyle(fontSize: 16, color: Colors.green),
+                        style: TextStyle(fontSize: 16),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () {
                         Navigator.of(context).pop(); // Close dialog
                         Navigator.of(context).pop(); // Go back to module screen
                       },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.grey[600],
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                       ),
                       child: const Text(
                         'Yes',
-                        style: TextStyle(fontSize: 16, color: Colors.green),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -450,42 +457,45 @@ class _QuizScreenState extends State<QuizScreen> {
                       ],
                     ),
 
-                  const SizedBox(height: 16),
+                  // Show question indicator and progress ONLY if NOT on last question
+                  if (_currentQuestion < _questions.length - 1) ...[
+                    const SizedBox(height: 16),
 
-                  // Question indicator and progress (always show)
-                  Column(
-                    children: [
-                      Text(
-                        'Question ${_currentQuestion + 1}/${_questions.length}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          color: Colors.green,
-                          fontWeight: FontWeight.w500,
+                    // Question indicator and progress
+                    Column(
+                      children: [
+                        Text(
+                          'Question ${_currentQuestion + 1}/${_questions.length}',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
+                        const SizedBox(height: 8),
 
-                      // Progress indicator
-                      Row(
-                        children: List.generate(_questions.length, (index) {
-                          return Expanded(
-                            child: Container(
-                              height: 4,
-                              margin: EdgeInsets.only(
-                                right: index < _questions.length - 1 ? 4 : 0,
+                        // Progress indicator
+                        Row(
+                          children: List.generate(_questions.length, (index) {
+                            return Expanded(
+                              child: Container(
+                                height: 4,
+                                margin: EdgeInsets.only(
+                                  right: index < _questions.length - 1 ? 4 : 0,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: index <= _currentQuestion
+                                      ? Colors.green
+                                      : Colors.grey[300],
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
                               ),
-                              decoration: BoxDecoration(
-                                color: index <= _currentQuestion
-                                    ? Colors.green
-                                    : Colors.grey[300],
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
+                  ],
 
                   // Save button (only show on last question)
                   if (_currentQuestion == _questions.length - 1)

@@ -58,8 +58,14 @@ class _ResultScreenState extends State<ResultScreen>
 
   @override
   Widget build(BuildContext context) {
-    final score = (widget.correctAnswers / widget.totalQuestions * 100)
-        .toStringAsFixed(2);
+    // Check if we have valid data
+    final hasValidData =
+        widget.totalQuestions > 0 && widget.correctAnswers >= 0;
+    final score = hasValidData
+        ? (widget.correctAnswers / widget.totalQuestions * 100).toStringAsFixed(
+            2,
+          )
+        : "0.00";
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -80,249 +86,319 @@ class _ResultScreenState extends State<ResultScreen>
           ),
         ],
       ),
-      body: Stack(
-        children: [
-          // Animated confetti background
-          AnimatedBuilder(
-            animation: _confettiController,
-            builder: (context, child) {
-              return CustomPaint(
-                painter: ConfettiPainter(_confettiController.value),
-                size: Size.infinite,
-              );
-            },
-          ),
+      body: hasValidData
+          ? Stack(
+              children: [
+                // Animated confetti background
+                AnimatedBuilder(
+                  animation: _confettiController,
+                  builder: (context, child) {
+                    return CustomPaint(
+                      painter: ConfettiPainter(_confettiController.value),
+                      size: Size.infinite,
+                    );
+                  },
+                ),
 
-          // Main content
-          FadeTransition(
-            opacity: _fadeAnimation,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-
-                  // Score display
-                  Column(
-                    children: [
-                      const Text(
-                        'YOUR SCORE IS',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black87,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-
-                      // Animated score with icon
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            '$score%',
-                            style: const TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: Colors.green,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.school,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 30),
-
-                      // Results summary card
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[200],
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    'Correct Answers',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '${widget.correctAnswers}',
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Container(
-                              width: 1,
-                              height: 60,
-                              color: Colors.grey[400],
-                            ),
-
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  const Text(
-                                    'Total Questions',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '${widget.totalQuestions}',
-                                    style: const TextStyle(
-                                      fontSize: 32,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  // Additional stats (if needed)
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
+                // Main content
+                FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Assessment Summary',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black87,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 40),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // Score display
+                        Column(
                           children: [
                             const Text(
-                              'Time Taken:',
+                              'YOUR SCORE IS',
                               style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Text(
-                              '${widget.timeTaken ~/ 60}m ${widget.timeTaken % 60}s',
-                              style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.black87,
+                                letterSpacing: 1.2,
                               ),
                             ),
-                          ],
-                        ),
+                            const SizedBox(height: 8),
 
-                        const SizedBox(height: 12),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Accuracy:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
+                            // Animated score with icon
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '$score%',
+                                  style: const TextStyle(
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(
+                                    Icons.school,
+                                    color: Colors.white,
+                                    size: 24,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              '$score%',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ],
-                        ),
 
-                        const SizedBox(height: 12),
+                            const SizedBox(height: 30),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Status:',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
-                              ),
-                            ),
+                            // Results summary card
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 4,
+                                vertical: 20,
+                                horizontal: 16,
                               ),
                               decoration: BoxDecoration(
-                                color: double.parse(score) >= 60
-                                    ? Colors.green[100]
-                                    : Colors.red[100],
+                                color: Colors.grey[200],
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: Text(
-                                double.parse(score) >= 60 ? 'Passed' : 'Failed',
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          'Correct Answers',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          '${widget.correctAnswers}',
+                                          style: const TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Container(
+                                    width: 1,
+                                    height: 60,
+                                    color: Colors.grey[400],
+                                  ),
+
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        const Text(
+                                          'Total Questions',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          '${widget.totalQuestions}',
+                                          style: const TextStyle(
+                                            fontSize: 32,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // Additional stats (if needed)
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Assessment Summary',
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: double.parse(score) >= 60
-                                      ? Colors.green[700]
-                                      : Colors.red[700],
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Time Taken:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${widget.timeTaken ~/ 60}m ${widget.timeTaken % 60}s',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Accuracy:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  Text(
+                                    '$score%',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 12),
+
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  const Text(
+                                    'Status:',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12,
+                                      vertical: 4,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: double.parse(score) >= 60
+                                          ? Colors.green[100]
+                                          : Colors.red[100],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      double.parse(score) >= 60
+                                          ? 'Passed'
+                                          : 'Failed',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        color: double.parse(score) >= 60
+                                            ? Colors.green[700]
+                                            : Colors.red[700],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 40),
+
+                        // Action buttons
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.green,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Back to Module',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: OutlinedButton(
+                                onPressed: () {
+                                  // Navigate back to take exam again
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    '/quiz',
+                                  );
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.green,
+                                  side: const BorderSide(color: Colors.green),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 16,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Retake',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
@@ -331,66 +407,92 @@ class _ResultScreenState extends State<ResultScreen>
                       ],
                     ),
                   ),
-
-                  const SizedBox(height: 40),
-
-                  // Action buttons
-                  Row(
+                ),
+              ],
+            )
+          :
+            // No data available - show clean white background with message
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Back to Module',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                      Icon(
+                        Icons.assignment_outlined,
+                        size: 80,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 24),
+                      Text(
+                        'No Assessment Results',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () {
-                            // Navigate back to take exam again
-                            Navigator.pushReplacementNamed(context, '/quiz');
-                          },
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.green,
-                            side: const BorderSide(color: Colors.green),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: const Text(
-                            'Retake',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Take an assessment to see your results here.',
+                        style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+                        textAlign: TextAlign.center,
                       ),
+                      // const SizedBox(height: 40),
+                      // SizedBox(
+                      //   width: double.infinity,
+                      //   child: ElevatedButton(
+                      //     onPressed: () {
+                      //       Navigator.pushReplacementNamed(context, '/quiz');
+                      //     },
+                      //     style: ElevatedButton.styleFrom(
+                      //       backgroundColor: Colors.green,
+                      //       foregroundColor: Colors.white,
+                      //       padding: const EdgeInsets.symmetric(vertical: 16),
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(8),
+                      //       ),
+                      //     ),
+                      //     child: const Text(
+                      //       'Take Assessment',
+                      //       style: TextStyle(
+                      //         fontSize: 16,
+                      //         fontWeight: FontWeight.w600,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 12),
+                      //   SizedBox(
+                      //     width: double.infinity,
+                      //     child: OutlinedButton(
+                      //       onPressed: () {
+                      //         Navigator.pop(context);
+                      //       },
+                      //       style: OutlinedButton.styleFrom(
+                      //         foregroundColor: Colors.green,
+                      //         side: const BorderSide(color: Colors.green),
+                      //         padding: const EdgeInsets.symmetric(vertical: 16),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(8),
+                      //         ),
+                      //       ),
+                      //       child: const Text(
+                      //         'Back to Module',
+                      //         style: TextStyle(
+                      //           fontSize: 16,
+                      //           fontWeight: FontWeight.w600,
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
                     ],
                   ),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
     );
   }
 }
