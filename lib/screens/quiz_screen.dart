@@ -116,7 +116,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   'Attention!',
                   style: TextStyle(
                     fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    // fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
@@ -146,32 +146,25 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       child: const Text(
                         'No, Continue',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: 16, color: Colors.green),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    ElevatedButton(
+                    TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(); // Close dialog
                         Navigator.of(context).pop(); // Go back to module screen
                       },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.grey[600],
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16,
                           vertical: 8,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                        ),
                       ),
                       child: const Text(
                         'Yes',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(fontSize: 16, color: Colors.green),
                       ),
                     ),
                   ],
