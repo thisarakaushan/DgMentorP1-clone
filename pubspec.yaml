@@ -19,6 +19,10 @@ dependencies:
   cloud_firestore: ^5.6.12
   provider: ^6.1.5
   audioplayers: ^6.5.0
+  firebase_messaging: ^15.2.9
+  flutter_local_notifications: ^19.3.1
+  flutter_app_badge: ^2.0.2
+  timezone: ^0.10.1
 
 
 dev_dependencies:
@@ -42,6 +46,7 @@ flutter:
     - assets/images/splash_icon.png
     - assets/images/slider_image.png
     - assets/app_icon.png
+    - assets/refresh_icon.png
     - assets/images/course1_image.png
     - assets/images/course2_image.png
     - assets/images/playbook1_image.png

@@ -10,6 +10,7 @@ import '../screens/group_chat_screen.dart';
 import '../screens/nearby_trainers_screen.dart';
 import '../screens/financial_diaries_screen.dart';
 import '../screens/notifications_screen.dart';
+import '../screens/refresh_screen.dart';
 
 class AppRoutes {
   static const String splash = '/';
@@ -23,6 +24,7 @@ class AppRoutes {
   static const String nearbyTrainers = '/nearby-trainers';
   static const String financialDiaries = '/financial-diaries';
   static const String notifications = '/notifications';
+  static const String refresh = '/refresh';
 
   static final Map<String, WidgetBuilder> routes = {
     splash: (context) => const SplashScreen(),
@@ -36,6 +38,7 @@ class AppRoutes {
     nearbyTrainers: (context) => const NearByTrainersScreen(),
     financialDiaries: (context) => const FinancialDiariesScreen(),
     notifications: (context) => const NotificationsScreen(),
+    refresh: (context) => const RefreshScreen(),
   };
 
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {

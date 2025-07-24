@@ -1,15 +1,14 @@
 // Packages
 import 'package:flutter/material.dart';
 
-// Screens
-// import './course_screen.dart';
-
 // Widgets
 import '../widgets/drawer_widget.dart';
 import '../widgets/custom_bottom_nav.dart';
+import '../widgets/app_bar_widget.dart';
 
 // Utils
 import '../utils/routes.dart';
+import '../utils/bottom_nav_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,38 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _onIndexChanged(int index) {
     if (_scaffoldKey.currentContext != null) {
-      switch (index) {
-        case 0:
-          Navigator.pushNamed(_scaffoldKey.currentContext!, AppRoutes.home);
-          break;
-        case 1:
-          Navigator.pushNamed(_scaffoldKey.currentContext!, AppRoutes.support);
-          break;
-        case 2:
-          Navigator.pushNamed(
-            _scaffoldKey.currentContext!,
-            AppRoutes.groupChat,
-          );
-          break;
-        case 3:
-          Navigator.pushNamed(
-            _scaffoldKey.currentContext!,
-            AppRoutes.nearbyTrainers,
-          );
-          break;
-        case 4:
-          Navigator.pushNamed(
-            _scaffoldKey.currentContext!,
-            AppRoutes.financialDiaries,
-          );
-          break;
-        case 5:
-          Navigator.pushNamed(
-            _scaffoldKey.currentContext!,
-            AppRoutes.notifications,
-          );
-          break;
-      }
+      NavHandler.handleBottomNavTap(_scaffoldKey.currentContext!, index);
     }
   }
 
@@ -62,30 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-          ),
-        ),
-        title: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Welcome Thisara'),
-            Text('DgMentor', style: TextStyle(fontSize: 12)),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Image.asset('assets/app_icon.png'),
-            ),
-          ),
-        ],
-        backgroundColor: Colors.green,
+      appBar: CustomAppBar(
+        scaffoldKey: _scaffoldKey,
+        title: 'Welcome Thisara',
+        subtitle: 'DgMentor',
       ),
       drawer: const DrawerWidget(),
       body: SingleChildScrollView(
@@ -234,7 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavBar(onIndexChanged: _onIndexChanged),
+      bottomNavigationBar: CustomBottomNavBar(
+        onIndexChanged: _onIndexChanged,
+        initialIndex: 0, // Set initial index to 0 for Home
+      ),
     );
   }
 }

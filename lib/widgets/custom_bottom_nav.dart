@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
-  final Function(int)? onIndexChanged; // Callback for navigation
+  final Function(int)? onIndexChanged;
+  final int initialIndex;
+  final int unreadCount; // New parameter for unread notifications
 
-  const CustomBottomNavBar({super.key, this.onIndexChanged});
+  const CustomBottomNavBar({
+    super.key,
+    this.onIndexChanged,
+    this.initialIndex = 0,
+    this.unreadCount = 0,
+  });
 
   @override
   State<CustomBottomNavBar> createState() => _CustomBottomNavBarState();
 }
 
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
   final List<IconData> icons = [
     Icons.home,
@@ -22,19 +29,16 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double itemWidth = screenWidth / icons.length;
 
-    // return Scaffold(
-    //   backgroundColor: Colors.white,
-    //   body: Center(
-    //     child: Text(
-    //       "Page $_selectedIndex",
-    //       style: const TextStyle(fontSize: 24),
-    //     ),
-    //   ),
-    //   bottomNavigationBar
     return SizedBox(
       height: 60,
       child: Stack(
@@ -69,14 +73,35 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
                         _selectedIndex = index;
                       });
                       if (widget.onIndexChanged != null) {
-                        widget.onIndexChanged!(
-                          index,
-                        ); // Notify parent of index change
+                        widget.onIndexChanged!(index);
                       }
                     },
-                    child: Opacity(
-                      opacity: isActive ? 0.0 : 1.0, // Hide active icon
-                      child: Icon(icons[index], color: Colors.white, size: 28),
+                    child: Stack(
+                      children: [
+                        Opacity(
+                          opacity: isActive ? 0.0 : 1.0,
+                          child: Icon(
+                            icons[index],
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        if (index == 5 &&
+                            widget.unreadCount >
+                                0) // Show dot on notifications icon
+                          Positioned(
+                            top: 0,
+                            right: 0,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   );
                 }),
@@ -132,32 +157,21 @@ class NavBarPainter extends CustomPainter {
     double notchRadius = 35;
     double notchCenter = itemWidth * activeIndex + itemWidth / 2;
 
-    // Start left
     path.moveTo(0, 0);
-
-    // Draw to left of notch
     path.lineTo(notchCenter - notchRadius - 10, 0);
-
-    // Curve up
     path.quadraticBezierTo(
       notchCenter - notchRadius,
       0,
       notchCenter - notchRadius + 10,
       20,
     );
-
-    // Peak of the notch
     path.quadraticBezierTo(notchCenter, 45, notchCenter + notchRadius - 10, 20);
-
-    // Curve down
     path.quadraticBezierTo(
       notchCenter + notchRadius,
       0,
       notchCenter + notchRadius + 10,
       0,
     );
-
-    // Finish rest of the bar
     path.lineTo(size.width, 0);
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);

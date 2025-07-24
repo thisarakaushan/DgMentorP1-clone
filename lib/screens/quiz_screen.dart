@@ -99,6 +99,7 @@ class _QuizScreenState extends State<QuizScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
+      // ignore: deprecated_member_use
       barrierColor: Colors.black.withOpacity(0.7),
       builder: (BuildContext context) {
         return Dialog(
@@ -227,6 +228,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final options = currentQuestion['options']!.split(',');
     final answersAudio = currentQuestion['answers']!.split(',');
 
+    // ignore: deprecated_member_use
     return WillPopScope(
       onWillPop: () async {
         _showExitDialog();
